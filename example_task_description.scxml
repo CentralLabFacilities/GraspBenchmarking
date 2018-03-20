@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<!-- enable-qt-mode: yes -->
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0"
+       name="GraspBenchmark" initial="graspmaschine" datamodel="ecmascript">
+
+<state id="graspmaschine" initial="initial">
+    <state id="initial">
+        <onentry>
+            <send type="qt:signal" event="defaultParameter">
+                <param name="max_grasp_time" expr="50"/>
+                <param name="max_place_time" expr="50"/>
+		<param name="amiro_x_pos" expr="100"/>
+                <param name="amiro_y_pos" expr="250"/>
+                <param name="amiro_o_pos" expr="0"/>
+		<param name="action" expr="'drive;grasp;place;driveback'"/>
+		<param name="robotname" expr="'meka'"/>
+		<param name="amiro_x_pos_min" expr="-200"/>
+		<param name="amiro_y_pos_min" expr="-50"/>
+		<param name="amiro_x_pos_max" expr="200"/>
+		<param name="amiro_y_pos_max" expr="300"/>
+            </send>
+        </onentry>
+        <transition event="nextAction" target="action0"/>
+    </state>
+    <state id="action0">
+        <onentry>
+            <send type="qt:signal" event="setParameter">
+                <param name="amiro_x_pos" expr="0"/>
+                <param name="amiro_y_pos" expr="200"/>
+                <param name="amiro_o_pos" expr="0"/>
+            </send>
+        </onentry>
+        <transition event="nextAction" target="action1"/>
+    </state>
+
+    <state id="action1">
+        <onentry>
+            <send type="qt:signal" event="setParameter">
+                <param name="amiro_x_pos" expr="100"/>
+                <param name="amiro_y_pos" expr="200"/>
+                <param name="amiro_o_pos" expr="0"/>
+		<param name="action" expr="'drive;grasp'"/>
+            </send>
+        </onentry>
+        <transition event="nextAction" target="action2"/>
+    </state>
+
+    <state id="action2">
+        <onentry>
+            <send type="qt:signal" event="setParameter">
+                <param name="amiro_x_pos" expr="-100"/>
+                <param name="amiro_y_pos" expr="200"/>
+                <param name="amiro_o_pos" expr="0"/>
+		<param name="action" expr="'drive;place;driveback'"/>
+            </send>
+        </onentry>
+        <transition event="nextAction" target="outofrange"/>
+    </state>
+
+    <state id="outofrange">
+        <onentry>
+            <send type="qt:signal" event="setParameter">
+                <param name="amiro_x_pos" expr="-100"/>
+                <param name="amiro_y_pos" expr="0"/>
+                <param name="amiro_o_pos" expr="0"/>
+            </send>
+        </onentry>
+        <transition event="nextAction" target="end"/>
+    </state>
+    <state id="end"/>
+</state>
+</scxml>
+
+
+<!-- 		<param name="action" expr="drive;grasp;place;back"/> -->
